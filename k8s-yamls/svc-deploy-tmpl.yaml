@@ -26,8 +26,8 @@ items:
           name: {name}
           resources:
             requests:
-              cpu: 100m  # modify resource request to fit prod
-              memory: 128Mi
+              cpu: 200m  # modify resource request to fit prod
+              memory: 256Mi
         dnsPolicy: ClusterFirst
         restartPolicy: Always
 
