@@ -105,7 +105,8 @@ def call_deploy_local( env, server, bLocal = True ):
     }
 
     # get tmpl
-    with open( "./k8s-yamls/svc-deploy-tmpl.yaml" ) as fp:
+    path_yaml = os.path.join( os.path.dirname(__file__), "./k8s-yamls/svc-deploy-tmpl.yaml" )
+    with open( path_yaml ) as fp:
         temp = fp.read()
 
     if bLocal :
