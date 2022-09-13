@@ -223,8 +223,8 @@ if __name__ == '__main__':
         # build && deploy to local k8s
         ./deploy.py dot-iap build deploy_local
 
-        # build && upload to aws && restart related pods
-        ./deploy.py all build upload_aws
+        # build && upload to aws|tc && restart related pods
+        ./deploy.py all build upload_[aws|tc]
         """
 
         )
