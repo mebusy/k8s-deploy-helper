@@ -7,5 +7,7 @@ aws EKS, tencent TKE,  deploy helper
     ```bash
     git submodule add -b deploy-helper https://github.com/mebusy/k8s-deploy-helper.git helper
     ```
+2. in `example` folder
+    - edit conf.yaml
 
 

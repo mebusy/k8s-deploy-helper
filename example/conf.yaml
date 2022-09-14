@@ -1,0 +1,69 @@
+# main configuration for deployment
+#
+#
+
+ENV: &env "dev"  # environment, only `dev` and `prod` are allowed
+
+cluster:
+  # aws ecr root
+  # ecr_root: xxxxxxx.dkr.ecr.cn-northwest-1.amazonaws.com.cn
+  # tencent repo
+  ecr_root: ccr.ccs.tencentyun.com/yyyy-app
+
+cluster-local:
+  # local env ----
+  ecr_root: 10.192.91.95:5050
+
+
+# Caution: k8s NAMESPACE must be create before deployment
+# Caution: aws ecr REPOSITORY must be create before deployment
+# Cuation: LOGIN aws ecr registry before upload image
+servers:
+  - name: "server-test"  # k8s service name
+    path: "../TestServer" # project source code
+    # concat namespace by using a customized function `join`
+    namespace: !join [ "ns-servertest-" , *env ] # k8s namespace service lies in
+    port: 5678  # k8s service port
+
+    # aws env ----
+    ingress-host: !join [ "servertest-",  *env ,  ".domain.com" ] # k8s ingress host  modify it in prod branch
+    env:  # container environment, local deployment won't use it
+      - name: MYSQL_HOST
+        value: 10.0.12.17
+      - name: MYSQL_DB
+        value: servertest_dev
+      - name: MYSQL_USER
+        value: servertest_dev
+      - name: MYSQL_PASSWORD
+        value: servertest_dev_pwd
+    ingress-annotations:
+      # alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'  # from here, aws
+      # # alb.ingress.kubernetes.io/scheme: internet-facing
+      # # alb.ingress.kubernetes.io/subnets: subnet-09949a93037583daf,subnet-05fc8a6ce56b13493  # not necessary, but we are short of IP ...
+      # alb.ingress.kubernetes.io/scheme: internal
+      # alb.ingress.kubernetes.io/subnets: subnet-0b8d021a94b6876e4,subnet-0c2521a662ecee496
+      # kubernetes.io/ingress.class: alb
+      kubernetes.io/ingress.class: "qcloud"  # for tecent cloud
+
+    ingress-host-local: &ingress-local "" #  do NOT specify host for local k8s
+    env-local: &env-local 
+      - name: MYSQL_HOST
+        value: mysql-57.mysql-57.svc.cluster.local
+      - name: MYSQL_DB
+        value: servertest
+      - name: MYSQL_USER
+        value: root
+      - name: MYSQL_PASSWORD
+        value: rootpwd
+      - name: MYSQL_PORT
+        value: '3306'
+
+    ingress-annotations-local: &ingress-anno-local
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"  # local k8s use one domain, multiple sub-path, and rewrite rule
+      # kubernetes.io/ingress.class: "nginx"
+
+
+
+  - name: "NA"  # server #2 , ...
+
+
