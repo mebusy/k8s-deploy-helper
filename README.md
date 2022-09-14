@@ -9,5 +9,7 @@ aws EKS, tencent TKE,  deploy helper
     ```
 2. in `example` folder
     - edit conf.yaml
-
+3. put your local k8s config file to `example/kubeconfs/local.conf`
+    - put your remote  k8s config file to `example/kubeconfs/prod.conf`
+4. deploy your service to local k8s by executing  `example/deploy_local.sh`
 
